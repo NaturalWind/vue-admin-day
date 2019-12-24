@@ -50,7 +50,11 @@ export default {
   },
   methods: {
     clickMenu (item) {
-      console.log('点击菜单：', item);
+      let parameter = {
+        path: item.router.routerPath,
+        query: item.router.routerQuery
+      };
+      this.$router.push(parameter).catch(() => {});
     }
   }
 }

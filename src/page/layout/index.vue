@@ -6,6 +6,9 @@
     <div class="day-bar-wrapper">
       <bar></bar>
     </div>
+    <div class="day-tag-wrapper">
+      <tags></tags>
+    </div>
     <div class="day-view-wrapper">
       <el-scrollbar style="height: 100%">
         <router-view></router-view>
@@ -18,11 +21,13 @@
 import { mapGetters } from 'vuex';
 import Bar from '../bar/index';
 import Navs from '../nav/index';
+import Tags from '../tag/index';
 
 export default {
   components: {
     Bar,
-    Navs
+    Navs,
+    Tags
   },
   computed: {
     ...mapGetters([
@@ -51,6 +56,8 @@ export default {
     background: chocolate;
   }
   .day-bar-wrapper {
+    display: flex;
+    align-items: center;
     position: absolute;
     top: 0;
     left: 240px;
@@ -58,12 +65,20 @@ export default {
     height: 64px;
     background: cornflowerblue;
   }
-  .day-view-wrapper {
+  .day-tag-wrapper {
     position: absolute;
     top: 64px;
     left: 240px;
     width: calc(100% - 240px);
-    height: calc(100% - 64px);
+    height: 40px;
+    background: cadetblue;
+  }
+  .day-view-wrapper {
+    position: absolute;
+    top: 64px + 40px;
+    left: 240px;
+    width: calc(100% - 240px);
+    height: calc(100% - (64px + 40px));
     background: rebeccapurple;
     .el-scrollbar__view {
       height: 100%;
@@ -75,6 +90,10 @@ export default {
     width: 64px;
   }
   .day-bar-wrapper {
+    left: 64px;
+    width: calc(100% - 64px);
+  }
+  .day-tag-wrapper {
     left: 64px;
     width: calc(100% - 64px);
   }

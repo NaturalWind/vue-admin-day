@@ -56,9 +56,10 @@ export default {
   background: saddlebrown;
   .day-bar-btn-wrapper {
     display: flex;
+    align-items: center;
     position: relative;
     width: 100%;
-    height: 45px;
+    height: 100%;
     .day-bar-btn-box {
       position: absolute;
       background: cadetblue;

@@ -117,7 +117,7 @@ export default {
         right: arr.filter(el => { return el.base.direction === 'right'; }).sort((a, b) => a.base.index - b.base.index)
       };
       let obj = {
-        top: '10px',
+        // top: '10px',
         width: `${item.base.style.width}px`,
         height: `${item.base.style.height}px`
       };
@@ -171,6 +171,7 @@ export default {
 
 <style lang="scss">
 .day-bar-content-scope {
+  height: 45px;
   .user-wrapper {
     display: flex;
     align-items: center;
