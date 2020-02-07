@@ -54,6 +54,12 @@ export default {
         path: item.router.routerPath,
         query: item.router.routerQuery
       };
+      // 针对使用ifrom内嵌的路由在标签栏名称显示问题
+      if (item.router.routerPath === '/dayIframe') {
+        if (parameter.query) {
+          parameter.query.name = item.menu.name;
+        }
+      }
       this.$router.push(parameter).catch(() => {});
     }
   }

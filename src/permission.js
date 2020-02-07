@@ -27,11 +27,12 @@ router.beforeEach((to, from, next) => {
             next({ path: '/login' })
           })
         })
-      } else {
+      } else {        
         if (!validateNull(to.fullPath) && !validateNull(to.name)) {
           store.commit('ADD_TAG', {
             path: to.fullPath,
-            name: to.name
+            // 针对使用ifrom内嵌的路由在标签栏名称显示问题
+            name: to.path === '/dayIframe/index' ? to.query.name || to.name : to.name
           })
         }
         next()
