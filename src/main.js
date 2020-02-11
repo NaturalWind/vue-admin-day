@@ -6,6 +6,7 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import { iconfontUrl, iconfontVersion } from '@/config/env'
+import DayComponents from '@/config/components'
 // 工具
 import { loadStyle } from './util/util'
 // 数据模拟
@@ -20,6 +21,7 @@ iconfontVersion.forEach(item => {
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+Vue.use(DayComponents)
 
 new Vue({
   router,
