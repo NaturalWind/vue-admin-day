@@ -1,3 +1,5 @@
+import { isURL } from '@/util/validate';
+
 /**
  * 动态插入css
  */
@@ -72,4 +74,56 @@ export const getTreeArr = (obj) => {
     })
   }
   return arr1
+}
+
+/**
+ * 传入时间戳，转换指定的时间格式
+ * @param {Number} val      时间戳
+ * @param {String} dateType 要得到的时间格式 例如 YYYY-MM-DD hh:mm:ss
+ * @return dataStr 例如 YYYY-MM-DD hh:mm:ss
+ */
+export function switchTime(val = +new Date(), dateType = 'YYYY-MM-DD') {
+  // 将字符串转换成数字
+  const timeStamp = +new Date(val);
+  // 如果转换成数字出错
+  if (!timeStamp) {
+    return val;
+  }
+  let str;
+  // 得到时间字符串
+  const dateStr = new Date(timeStamp);
+  str = dateType.replace('YYYY', dateStr.getFullYear());
+  str = str.replace('MM', (dateStr.getMonth() + 1 < 10 ? '0' : '') + (dateStr.getMonth() + 1));
+  str = str.replace('DD', (dateStr.getDate() < 10 ? '0' : '') + dateStr.getDate());
+  str = str.replace('hh', (dateStr.getHours() < 10 ? '0' : '') + dateStr.getHours());
+  str = str.replace('mm', (dateStr.getMinutes() < 10 ? '0' : '') + dateStr.getMinutes());
+  str = str.replace('ss', (dateStr.getSeconds() < 10 ? '0' : '') + dateStr.getSeconds());
+  return str;
+}
+
+/**
+ * 动态添加路由
+ * @param {Object} router VueRouter实例
+ * @param {Object} routerData 路由数据
+ */
+export function installRouters(router, routerData) {
+  let menu = [];
+  jsonTreeTransformArray(routerData, []).forEach(item => {
+    if (!isURL(item.path)) {
+      let menuItem = {
+        parentId: item.parentId,
+        id: item.id,
+        path: item.path || '',
+        name: item.name || '',
+        component: resolve => require([item.component === 'Layout' ? '@/page/layout/index.vue' : `@/${item.component}.vue`], resolve),
+        meta: {
+          keepAlive: item.keepAlive || false
+        },
+        children: []
+      };
+      menu.push(menuItem);
+    }
+  });
+  let routerMenu = getTreeArr({key: 'id', pKey: 'parentId', data: menu, jsonData: false});
+  router.addRoutes(routerMenu);
 }

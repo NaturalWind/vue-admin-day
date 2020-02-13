@@ -1,34 +1,10 @@
-import router from '@/router'
 import { loginApi } from '@/api/login'
 import { getUserInfoApi } from '@/api/user/userInfo'
-import { getUserMenuApi } from '@/api/user/menu'
+import { getAllMenuApi } from '@/api/user/menu'
 import { getStorage, setStorage } from '@/util/storage'
-import { jsonTreeTransformArray, getTreeArr } from '@/util/util'
-import { isURL } from '@/util/validate'
+import { getTreeArr } from '@/util/util'
 
 const stateCode = 200
-
-function formattingRouter(data) {
-  let menu = [];
-  jsonTreeTransformArray(data, []).forEach(item => {
-    if (!isURL(item.path)) {
-      let menuItem = {
-        parentId: item.parentId,
-        id: item.id,
-        path: item.path || '',
-        name: item.name || '',
-        component: resolve => require([item.component === 'Layout' ? '@/page/layout/index.vue' : `@/${item.component}.vue`], resolve),
-        meta: {
-          keepAlive: item.keepAlive || false
-        },
-        children: []
-      }
-      menu.push(menuItem)
-    }
-  })
-  let routerMenu = getTreeArr({key: 'id', pKey: 'parentId', data: menu})
-  router.addRoutes(routerMenu)
-}
 
 const user = {
   state: {
@@ -48,13 +24,13 @@ const user = {
   actions: {
     UserLogin({ commit }, userInfo) {
       const parameter = {
-        username: userInfo.username,
+        account: userInfo.username,
         password: userInfo.password
       }
       return new Promise(resolve => {
         loginApi(parameter).then(res => {
-          commit('SET_TOKEN', res.token)
-          resolve()
+          commit('SET_TOKEN', res.content.token || '')
+          resolve(res)
         })
       })
     },
@@ -62,7 +38,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfoApi().then(res => {
           if (res.code === stateCode) {
-            commit('SET_USER_INFO', res.data.userInfo)
+            commit('SET_USER_INFO', res.content)
             resolve()
           } else {
             reject()
@@ -74,11 +50,16 @@ const user = {
     },
     GetUserMenu({ commit }) {
       return new Promise((resolve, reject) => {
-        getUserMenuApi().then(res => {
+        getAllMenuApi().then(res => {
           if (res.code === stateCode) {
-            formattingRouter(res.data)
-            resolve(res.data)
-            commit('SET_USER_MENU', res.data)
+            res.content.forEach(item => {
+              item.keepAlive = Boolean(item.keepAlive)
+              item.showParentMenu = Boolean(item.showParentMenu)
+              item.isJump = Boolean(item.isJump)
+            })
+            let tree = getTreeArr({key: 'id', pKey: 'parentId', data: res.content})
+            resolve(tree)
+            commit('SET_USER_MENU', tree)
           } else {
             reject()
           }

@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div :style="{pointerEvents: disabled ? 'none' : 'auto'}">
     <div @click="dialogVisible = true">
       <el-input
         v-model="currentIcon"
         readonly
+        :disabled="disabled"
         placeholder="请选择图标">
         <el-button slot="append" :icon="currentIcon"></el-button>
       </el-input>
@@ -51,6 +52,10 @@ export default {
     }
   },
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     iconData: {
       type: Array,
       default: () => []
@@ -71,9 +76,7 @@ export default {
       immediate: true
     },
     value (val) {
-      if (val) {
-        this.currentIcon = val;
-      }
+      this.currentIcon = val;
     }
   },
   methods: {

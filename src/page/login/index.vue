@@ -46,8 +46,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: 'admin',
-        password: '12345'
+        username: 'Vincent',
+        password: '123'
       },
       loginFormRules: {
         username: [
@@ -64,7 +64,11 @@ export default {
     clickLoginBtn () {
       this.$refs.loginFormRef.validate(valid => {
         if (valid) {
-          this.$store.dispatch('UserLogin', this.loginForm).then(() => {
+          this.$store.dispatch('UserLogin', this.loginForm).then(res => {
+            if (!res.success) {
+              this.$message.error(res.message);
+              return;
+            }
             this.$router.push({ path: '/' }).catch(() => {});
           })
         } else {
@@ -84,7 +88,8 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%);
+  animation: animate-bg 20s linear infinite;
+  background: url('../../assets/login_bg.png') 100% 100% no-repeat;
   .day-login-box {
     display: flex;
     justify-content: center;
@@ -93,7 +98,7 @@ export default {
     border-radius: 7px;
     border: 3px solid #fff;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    width: 50%;
+    width: 20%;
     height: 50%;
     .day-login-content-box {
       width: 90%;
@@ -101,11 +106,26 @@ export default {
         text-align: center;
         font-size: 25px;
         font-weight: 500;
-        color: #fff;
+        color: #606266;
       }
       .day-login-btn {
         width: 100%;
       }
+    }
+  }
+}
+@keyframes animate-bg {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% 100%;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .day-login-page {
+    .day-login-box {
+      width: 30%;
     }
   }
 }

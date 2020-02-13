@@ -11,8 +11,8 @@
     <div class="menu-panel">
       <el-tree
         class="menu-tree"
-        :data="menuData"
-        :props="defaultProps"
+        :data="menuData.data"
+        :props="menuData.defaultProps"
         @node-click="clickMenuNode">
       </el-tree>
       <day-form class="menu-info" :formData="formData"></day-form>
@@ -22,6 +22,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getTreeArr, switchTime } from '@/util/util';
+import { getAllMenuApi, getCurrentMenuApi, addMenuApi, editMenuApi, delMenuApi } from '@/api/user/menu';
 
 export default {
   data () {
@@ -73,11 +75,14 @@ export default {
           }
         }
       ],
-      defaultProps: {
-        children: 'children',
-        label: 'name'
+      currentMenuNode: undefined,
+      menuData: {
+        data: [],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        }
       },
-      menuData: [],
       formData: {
         model: {
           id: undefined,
@@ -139,6 +144,18 @@ export default {
               min: 0,
               max: 99999,
               placeholder: '排序'
+            },
+            events: {}
+          },
+          {
+            formItemProps: {
+              label: '名称',
+              prop: 'name'
+            },
+            component: 'el-input',
+            model: 'name',
+            props: {
+              placeholder: '名称'
             },
             events: {}
           },
@@ -233,7 +250,7 @@ export default {
               return (
                 <div>
                   <el-button props={data.props} onClick={data.events.clickSaveBtn}>保存</el-button>
-                  <el-button onClick={data.events.clickCancelBtn}>取消</el-button>
+                  <el-button disabled={data.props.disabled} onClick={data.events.clickCancelBtn}>取消</el-button>
                 </div>
               )
             },
@@ -255,18 +272,127 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isCollapse'
+      'userInfo'
     ])
   },
+  created () {
+    this.initData();
+  },
   methods: {
-    clickAddMenuBtn () { console.log('111') },
-    clickEditMenuBtn () { console.log('222') },
-    clickDeleteMenuBtn () { console.log('333') },
-    clickMenuNode (data) {
-      console.log(data);
+    initData () {
+      this.disabledFormItem(true);
+      this.getMenuData();
     },
-    clickSaveBtn () { console.log('444', this.formData.model) },
-    clickCancelBtn () { console.log('555') },
+    getMenuData () {
+      getAllMenuApi().then(res => {
+        if (res.success) {
+          this.menuData.data = getTreeArr({key: 'id', pKey: 'parentId', data: res.content});
+        } else {
+          this.$message.error(res.message);
+        }
+      })
+    },
+    disabledFormItem (val = true) {
+      let copyArr = [...this.formData.column];
+      copyArr.forEach(item => {
+        if (item.model !== 'id' && item.model !== 'parentId') {
+          item.props.disabled = val;
+        }
+      })
+      this.formData.column = copyArr;
+    },
+    resetFormModel () {
+      this.formData.model = {
+        id: undefined,
+        parentId: 0,
+        sort: 0, // 菜单排序
+        icon: undefined, // 菜单图标
+        name: undefined, // 菜单名称
+        path: undefined, // 菜单路径：如果为 http、https 开头则采用ifrom is_jump字段判断是否跳转出去
+        component: undefined, // 页面组件
+        keepAlive: false, // 是否缓存页面
+        showParentMenu: false, // 是否显示父菜单
+        isJump: false, // 外链是否跳转
+        createUser: undefined,
+        createTime: undefined,
+        updateUser: undefined,
+        updateTime: undefined
+      };
+    },
+    clickAddMenuBtn () {
+      this.resetFormModel();
+      this.formData.model.parentId = this.currentMenuNode || 0;
+      this.disabledFormItem(false);
+    },
+    clickEditMenuBtn () {
+      if (!this.formData.model.id) {
+        this.$message.error('请选择菜单');
+        return;
+      }
+      this.disabledFormItem(false);
+    },
+    clickDeleteMenuBtn () {
+      if (!this.formData.model.id) {
+        this.$message.error('请选择菜单');
+        return;
+      }
+      delMenuApi(this.formData.model.id).then(res => {
+        if (res.success) {
+          this.currentMenuNode = undefined;
+          this.resetFormModel();
+          this.getMenuData();
+          this.$message({
+            type: 'success',
+            message: '成功'
+          })
+        } else {
+          this.$message.error(res.message);
+        }
+      })
+    },
+    clickMenuNode (data) {
+      this.disabledFormItem(true);
+      getCurrentMenuApi(data.id).then(res => {
+        if (res.success) {
+          this.formData.model = res.content;
+          this.formData.model.keepAlive = Boolean(this.formData.model.keepAlive);
+          this.formData.model.showParentMenu = Boolean(this.formData.model.showParentMenu);
+          this.formData.model.isJump = Boolean(this.formData.model.isJump);
+          this.currentMenuNode = this.formData.model.id;
+        } else {
+          this.$message.error(res.message);
+        }
+      })
+    },
+    clickSaveBtn () {
+      let api = null;
+      let data = JSON.parse(JSON.stringify(this.formData.model));
+      if (data.id) {
+        api = editMenuApi;
+        data.updateUser = this.userInfo.id;
+        data.updateTime = switchTime(new Date(), 'YYYY-MM-DD hh:mm:ss');
+        delete data.createTime;
+      } else {
+        api = addMenuApi;
+        data.createUser = this.userInfo.id;
+        data.createTime = switchTime(new Date(), 'YYYY-MM-DD hh:mm:ss');
+      }
+      api(data).then(res => {
+        if (res.success) {
+          this.disabledFormItem(true);
+          this.getMenuData();
+          this.$message({
+            type: 'success',
+            message: '成功'
+          })
+        } else {
+          this.$message.error(res.message);
+        }
+      })
+    },
+    clickCancelBtn () {
+      this.disabledFormItem(true);
+    }
   }
 }
 </script>
