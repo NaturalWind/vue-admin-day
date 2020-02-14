@@ -99,7 +99,6 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background: cadetblue;
   .day-sidebar-content {
     position: relative;
     width: 100%;

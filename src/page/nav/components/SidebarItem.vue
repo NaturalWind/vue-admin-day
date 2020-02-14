@@ -10,8 +10,8 @@
         :key="item.name + getRouterPath(item)"
         v-if="(isShowParentMenu(item) || !item.children.length) && !isURL(item.path)"
         @click="clickMenuIten(item)">
-        <!-- iconfont 后面有空格 -->
-        <i :class="'iconfont ' + item.icon"></i>
+        <!-- iconfont -->
+        <i :class="item.icon"></i>
         <span slot="title">{{ item.name }}</span>
       </el-menu-item>
 
@@ -21,8 +21,8 @@
         :key="item.name + item.path"
         v-if="isURL(item.path)"
         @click="clickMenuIten(item)">
-        <!-- iconfont 后面有空格 -->
-        <i :class="'iconfont ' + item.icon"></i>
+        <!-- iconfont -->
+        <i :class="item.icon"></i>
         <span slot="title">{{ item.name }}</span>
       </el-menu-item>
 
@@ -35,8 +35,8 @@
         :key="item.name + item.path"
         v-if="item.children.length && !isShowParentMenu(item)">
         <template slot="title">
-          <!-- iconfont 后面有空格 -->
-          <i :class="'iconfont ' + item.icon"></i>
+          <!-- iconfont -->
+          <i :class="item.icon"></i>
           <span slot="title" :class="{'el-menu--display': collapse}">{{ item.name }}</span>
         </template>
         <sidebar-item

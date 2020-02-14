@@ -1,22 +1,24 @@
 <template>
   <div class="sys-menu">
-    <el-button-group class="menu-btn">
-      <el-button
-        v-for="(item, index) in btnGroup"
-        :key="index"
-        v-bind="item.props"
-        v-on="item.events">{{ item.base.name }}
-      </el-button>
-    </el-button-group>
-    <div class="menu-panel">
-      <el-tree
-        class="menu-tree"
-        :data="menuData.data"
-        :props="menuData.defaultProps"
-        @node-click="clickMenuNode">
-      </el-tree>
-      <day-form class="menu-info" :formData="formData"></day-form>
-    </div>
+    <day-base-container>
+      <el-button-group class="menu-btn">
+        <el-button
+          v-for="(item, index) in btnGroup"
+          :key="index"
+          v-bind="item.props"
+          v-on="item.events">{{ item.base.name }}
+        </el-button>
+      </el-button-group>
+      <div class="menu-panel">
+        <el-tree
+          class="menu-tree"
+          :data="menuData.data"
+          :props="menuData.defaultProps"
+          @node-click="clickMenuNode">
+        </el-tree>
+        <day-form class="menu-info" :formData="formData"></day-form>
+      </div>
+    </day-base-container>
   </div>
 </template>
 

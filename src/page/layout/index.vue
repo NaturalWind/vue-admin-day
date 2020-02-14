@@ -45,7 +45,6 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background: cadetblue;
   .day-nav-wrapper {
     position: absolute;
     top: 0;
@@ -53,7 +52,8 @@ export default {
     z-index: 1024;
     width: 240px;
     height: 100%;
-    background: chocolate;
+    background: #fff;
+    box-shadow: 2px 0 6px rgba(0, 21, 41, .15);
   }
   .day-bar-wrapper {
     display: flex;
@@ -63,7 +63,7 @@ export default {
     left: 240px;
     width: calc(100% - 240px);
     height: 64px;
-    background: cornflowerblue;
+    background: $mainBgColor;
   }
   .day-tag-wrapper {
     position: absolute;
@@ -71,7 +71,7 @@ export default {
     left: 240px;
     width: calc(100% - 240px);
     height: 40px;
-    background: cadetblue;
+    background: $conventionalBgColor;
   }
   .day-view-wrapper {
     position: absolute;
@@ -79,7 +79,7 @@ export default {
     left: 240px;
     width: calc(100% - 240px);
     height: calc(100% - (64px + 40px));
-    background: rebeccapurple;
+    background: $pageBgColor;
     .el-scrollbar__view {
       height: 100%;
     }

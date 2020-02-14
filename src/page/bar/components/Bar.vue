@@ -53,7 +53,6 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background: saddlebrown;
   .day-bar-btn-wrapper {
     display: flex;
     align-items: center;
@@ -62,7 +61,6 @@ export default {
     height: 100%;
     .day-bar-btn-box {
       position: absolute;
-      background: cadetblue;
     }
   }
 }

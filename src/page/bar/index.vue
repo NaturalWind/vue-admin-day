@@ -3,10 +3,10 @@
     <div class="user-wrapper" slot="component-user">
       <img
         class="user-icon"
-        src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+        :src="userInfo.avatar ? userInfo.avatar : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
         alt="">
       <el-dropdown class="user-name" @command="clickUserOptions">
-        <span class="el-dropdown-link" :title="'Vincent'">Vincent
+        <span class="el-dropdown-link" style="color: #fff;" :title="userInfo.name">{{ userInfo.name }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -22,11 +22,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Bar from './components/Bar';
 
 export default {
   components: {
     Bar
+  },
+  computed: {
+    ...mapGetters([
+      'userInfo'
+    ])
   },
   data () {
     return {
@@ -92,7 +98,7 @@ export default {
             }
           },
           props: {
-            style: { fontSize: '30px' },
+            style: { fontSize: '30px', color: '#fff' },
             class: 'iconfont iconzhankai',
             title: '展开/收起'
           },

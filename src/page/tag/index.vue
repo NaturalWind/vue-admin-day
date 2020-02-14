@@ -9,7 +9,7 @@
           class="day-tag-style"
           v-for="(tag, index) in tagHistory"
           :key="index"
-          :type="'success'"
+          :type="''"
           closable
           @click="clickTagBtn(index)"
           @close="clickCloseTagBtn(index)">{{ tag.name }}
