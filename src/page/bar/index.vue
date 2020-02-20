@@ -24,8 +24,10 @@
 <script>
 import { mapGetters } from 'vuex';
 import Bar from './components/Bar';
+import themeColor from '@/mixins/themeColor';
 
 export default {
+  mixins: [themeColor()],
   components: {
     Bar
   },
@@ -76,7 +78,11 @@ export default {
           },
           model: '#409EFF',
           props: {},
-          events: {}
+          events: {
+            change: (val) => {
+              this.themeVal = val;
+            }
+          }
         },
         {
           render: (h, data) => {
@@ -114,6 +120,10 @@ export default {
   created () {
     this.componentList.forEach(el => {
       el.base.style = this.getLeftOrRightNumber(this.componentList, el);
+      // 主题颜色
+      if (el.component === 'el-color-picker') {
+        el.model = this.themeVal;
+      }
     });
   },
   methods: {

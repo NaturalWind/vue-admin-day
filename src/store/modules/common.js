@@ -7,6 +7,9 @@ const tagDefaultValue = {
 
 const common = {
   state: {
+    themeColor: getStorage({
+      name: 'themeColor'
+    }) || '#409EFF',
     isCollapse: false,
     tagHistory: getStorage({
       name: 'tagHistory',
@@ -19,6 +22,13 @@ const common = {
   },
   actions: {},
   mutations: {
+    SET_THEME_COLOR: (state, color) => {
+      state.themeColor = color
+      setStorage({
+        name: 'themeColor',
+        content: state.themeColor
+      })
+    },
     SET_COLLAPSE: state => {
       state.isCollapse = !state.isCollapse
     },
