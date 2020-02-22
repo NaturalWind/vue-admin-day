@@ -1,4 +1,5 @@
 const getters = {
+  logList: state => state.log.logList,
   token: state => state.user.token,
   userInfo: state => state.user.userInfo,
   userMenu: state => state.user.userMenu,

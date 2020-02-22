@@ -1,34 +1,40 @@
 <template>
-  <bar class="day-bar-content-scope" :componentList="componentList">
-    <div class="user-wrapper" slot="component-user">
-      <img
-        class="user-icon"
-        :src="userInfo.avatar ? userInfo.avatar : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
-        alt="">
-      <el-dropdown class="user-name" @command="clickUserOptions">
-        <span class="el-dropdown-link" style="color: #fff;" :title="userInfo.name">{{ userInfo.name }}
-          <i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            v-for="(item, index) in userOptions"
-            :key="index"
-            :command="item.value">{{ item.label }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
-  </bar>
+  <div style="width: 100%;">
+    <bar class="day-bar-content-scope" :componentList="componentList">
+      <div class="user-wrapper" slot="component-user">
+        <img
+          class="user-icon"
+          :src="userInfo.avatar ? userInfo.avatar : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
+          alt="">
+        <el-dropdown class="user-name" @command="clickUserOptions">
+          <span class="el-dropdown-link" style="color: #fff;" :title="userInfo.name">{{ userInfo.name }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="(item, index) in userOptions"
+              :key="index"
+              :command="item.value">{{ item.label }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </bar>
+    <!-- log -->
+    <log :visible.sync="logVisible"></log>
+  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Log from '../log/index';
 import Bar from './components/Bar';
 import themeColor from '@/mixins/themeColor';
 
 export default {
   mixins: [themeColor()],
   components: {
+    Log,
     Bar
   },
   computed: {
@@ -38,6 +44,7 @@ export default {
   },
   data () {
     return {
+      logVisible: false,
       userOptions: [
         {
           label: '个人信息',
@@ -96,6 +103,36 @@ export default {
             )
           },
           base: {
+            index: 2,
+            direction: 'right',
+            style: {
+              width: 30,
+              height: 30
+            }
+          },
+          props: {
+            style: { fontSize: '30px', color: '#fff' },
+            class: 'el-icon-warning-outline',
+            title: '错误日志'
+          },
+          events: {
+            click: () => {
+              this.logVisible = true;
+            }
+          }
+        },
+        {
+          render: (h, data) => {
+            return (
+              <i
+                style={data.props.style}
+                class={data.props.class}
+                title={data.props.title}
+                onClick={data.events.click}>
+              </i>
+            )
+          },
+          base: {
             index: 0,
             direction: 'left',
             style: {
@@ -110,7 +147,7 @@ export default {
           },
           events: {
             click: () => {
-              this.clickOpenOrCloseBtn(2);
+              this.clickOpenOrCloseBtn(3);
             }
           }
         }
