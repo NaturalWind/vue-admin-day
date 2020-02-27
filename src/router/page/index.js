@@ -26,6 +26,17 @@ export default [
     }
   },
   {
+    path: '/user',
+    component: layout,
+    children: [
+      {
+        path: 'info',
+        name: '用户信息',
+        component: () => import('@/views/user/info/index')
+      }
+    ]
+  },
+  {
     path: '/dayIframe',
     component: layout,
     redirect: '/dayIframe/index',

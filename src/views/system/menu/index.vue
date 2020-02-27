@@ -175,9 +175,20 @@ export default {
                   label: '阿里云图标',
                   value: 'aliyun',
                   list: [
-                    'el-icon-search',
-                    'el-icon-search',
-                    'el-icon-search'
+                    'iconfont iconxitongguanli',
+                    'iconfont iconlocation',
+                    'iconfont icontags',
+                    'iconfont icongithub-fill',
+                    'iconfont iconheart',
+                    'iconfont iconapple-fill'
+                  ]
+                },
+                {
+                  label: 'element图标',
+                  value: 'element',
+                  list: [
+                    'el-icon-menu',
+                    'el-icon-link'
                   ]
                 }
               ]

@@ -1,11 +1,11 @@
 <template>
-  <el-form v-model="formData.model" v-bind="formData.props">
+  <el-form :model="formData.model" v-bind="formData.props">
     <el-form-item
       v-for="(item, index) in formData.column"
       :key="index"
       v-bind="mergeObj(formData.formItemProps, item.formItemProps)">
       <component
-        v-if="item.component && !filterComponent.includes(item.component)"
+        v-if="item.component"
         :is="item.component"
         v-model="formData.model[item.model]"
         v-bind="item.props"
@@ -14,28 +14,13 @@
       <slot
         v-if="item.slot"
         :name="`form-${item.slot}`"
-        v-bind="item.props"
-        v-on="item.events">
+        :row="item">
       </slot>
       <render
         v-if="item.render"
         :render="item.render"
         :data="item">
       </render>
-      <!-- 选择器 -->
-      <el-select
-        v-if="item.component && item.component === 'el-select'"
-        v-model="formData.model[item.model]"
-        v-bind="item.props"
-        v-on="item.events">
-        <el-option
-          v-for="(optionItem, optionIndex) in item.data || []"
-          :key="optionIndex"
-          :label="optionItem[item.dataProps.key]"
-          :value="optionItem[item.dataProps.value]">
-        </el-option>
-      </el-select>
-      <!-- x -->
     </el-form-item>
   </el-form>
 </template>
@@ -49,10 +34,11 @@ export default {
   },
   data () {
     return {
-      filterComponent: ['el-select', 'el-radio-group', 'el-checkbox-group'],
       formData1: {
         model: {
-          select: 2
+          test: 'test',
+          slotTest: 'slotTest',
+          renderTest: 'renderTest'
         },
         props: {
           ref: 'form'
@@ -63,21 +49,13 @@ export default {
         column: [
           {
             formItemProps: {
-              label: '选择器',
-              prop: 'select'
+              label: '测试',
+              prop: 'test'
             },
-            component: 'el-select',
-            model: 'select',
-            data: [
-              { label: '选项一', value: 1 },
-              { label: '选项二', value: 2 }
-            ],
-            dataProps: {
-              key: 'label',
-              value: 'value'
-            },
+            component: 'el-input',
+            model: 'test',
             props: {
-              placeholder: '请选择'
+              placeholder: '请输入'
             },
             events: {}
           },

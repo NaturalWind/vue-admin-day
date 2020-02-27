@@ -2,7 +2,8 @@ import { loginApi } from '@/api/login'
 import { getUserInfoApi } from '@/api/user/userInfo'
 import { getAllMenuApi } from '@/api/user/menu'
 import { getStorage, setStorage } from '@/util/storage'
-import { getTreeArr } from '@/util/util'
+import { getTreeArr, installRouters } from '@/util/util'
+import router from '@/router'
 
 const stateCode = 200
 
@@ -58,6 +59,7 @@ const user = {
               item.isJump = Boolean(item.isJump)
             })
             let tree = getTreeArr({key: 'id', pKey: 'parentId', data: res.content})
+            installRouters(router, tree)
             resolve(tree)
             commit('SET_USER_MENU', tree)
           } else {

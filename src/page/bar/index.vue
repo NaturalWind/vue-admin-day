@@ -112,7 +112,7 @@ export default {
           },
           props: {
             style: { fontSize: '30px', color: '#fff' },
-            class: 'el-icon-warning-outline',
+            class: 'iconfont iconbug',
             title: '错误日志'
           },
           events: {
@@ -203,7 +203,7 @@ export default {
     clickUserOptions (val) {
       switch (val) {
         case 0:
-          console.log('个人信息');
+          this.$router.push({ path: '/user/info' }).catch(() => {});
           break;
         case 1:
           window.open('https://github.com/NaturalWind/vue-admin-day');
