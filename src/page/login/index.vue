@@ -35,16 +35,77 @@
             type="primary"
             @click="clickLoginBtn">登录
           </el-button>
+          <div class="line">OR</div>
+          <el-button
+            class="day-registered-btn"
+            type="primary"
+            @click="registeredDialogVisible = true">注册
+          </el-button>
         </el-form-item>
       </el-form>
+      <!-- 注册 -->
+      <el-dialog
+        title="注册"
+        :visible.sync="registeredDialogVisible"
+        width="30%">
+        <el-form
+          status-icon
+          ref="registeredFormRef"
+          label-width="0"
+          :hide-required-asterisk="true"
+          :model="registeredForm"
+          :rules="registeredFormRules">
+          <el-form-item prop="account">
+            <el-input
+              prefix-icon="el-icon-user"
+              v-model="registeredForm.account"
+              @keyup.enter.native="clickRegisteredBtn"
+              placeholder="请输入用户名">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              prefix-icon="el-icon-lollipop"
+              show-password
+              v-model="registeredForm.password"
+              @keyup.enter.native="clickRegisteredBtn"
+              placeholder="请输入密码">
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              style="width: 100%;"
+              type="primary"
+              @click="clickRegisteredBtn">注册
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import { userRegisteredApi } from '@/api/user/userInfo';
+
 export default {
   data () {
     return {
+      registeredDialogVisible: false,
+      registeredForm: {
+        account: '',
+        password: '',
+        type: 1
+      },
+      registeredFormRules: {
+        account: [
+          { required: true, message: '请输入用户名', trigger: 'blur'}
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur'},
+          { min: 3, message: '长度不能少于3位', trigger: 'blur'}
+        ]
+      },
       loginForm: {
         username: 'Vincent',
         password: '123'
@@ -61,6 +122,25 @@ export default {
     }
   },
   methods: {
+    clickRegisteredBtn () {
+      this.$refs.registeredFormRef.validate(valid => {
+        if (valid) {
+          userRegisteredApi(this.registeredForm).then(res => {
+            if (res.success) {
+              this.$message({
+                type: 'success',
+                message: '注册成功'
+              });
+              this.registeredDialogVisible = false;
+            } else {
+              this.$message.error(res.message);
+            }
+          })
+        } else {
+          return false;
+        }
+      })
+    },
     clickLoginBtn () {
       this.$refs.loginFormRef.validate(valid => {
         if (valid) {
@@ -108,8 +188,29 @@ export default {
         font-weight: 500;
         color: #606266;
       }
-      .day-login-btn {
+      .day-login-btn, .day-registered-btn {
         width: 100%;
+      }
+      .line {
+        position: relative;
+        text-align: center;
+        font-weight: 500;
+        color: #606266;
+        width: 100%;
+      }
+      .line::after, .line::before {
+        position: absolute;
+        top: 50%;
+        content: '';
+        width: 40%;
+        height: 1px;
+        background: #DCDFE6;
+      }
+      .line::after {
+        right: 10px;
+      }
+      .line::before {
+        left: 10px;
       }
     }
   }

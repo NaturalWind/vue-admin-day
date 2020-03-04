@@ -22,3 +22,11 @@ export function updateUserInfoApi(parameter) {
     data: parameter
   })
 }
+
+export function userRegisteredApi(parameter) {
+  return request({
+    url: '/api/user/registered',
+    method: 'post',
+    data: parameter
+  })
+}

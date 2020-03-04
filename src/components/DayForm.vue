@@ -34,6 +34,7 @@ export default {
   },
   data () {
     return {
+      form: null,
       formData1: {
         model: {
           test: 'test',
@@ -94,6 +95,9 @@ export default {
         column: []
       })
     }
+  },
+  mounted () {
+    this.form = this.$refs[this.formData.props.ref] || null;
   },
   methods: {
     mergeObj (data1 = {}, data2 = {}) {

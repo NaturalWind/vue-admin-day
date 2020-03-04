@@ -4,7 +4,7 @@
       <div class="user-wrapper" slot="component-user">
         <img
           class="user-icon"
-          :src="userInfo.avatar ? userInfo.avatar : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
+          :src="userInfo.avatar ? userAvatar : 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'"
           alt="">
         <el-dropdown class="user-name" @command="clickUserOptions">
           <span class="el-dropdown-link" style="color: #fff;" :title="userInfo.name">{{ userInfo.name }}
@@ -30,6 +30,7 @@ import { mapGetters } from 'vuex';
 import Log from '../log/index';
 import Bar from './components/Bar';
 import themeColor from '@/mixins/themeColor';
+import { fileUrl } from '@/config/env';
 
 export default {
   mixins: [themeColor()],
@@ -38,6 +39,9 @@ export default {
     Bar
   },
   computed: {
+    userAvatar () {
+      return `${fileUrl}${this.userInfo.avatar}`;
+    },
     ...mapGetters([
       'userInfo'
     ])

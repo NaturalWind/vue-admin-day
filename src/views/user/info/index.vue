@@ -25,6 +25,7 @@
 import { mapGetters } from 'vuex';
 import { switchTime } from '@/util/util';
 import { updateUserInfoApi, updateUserPwdApi } from '@/api/user/userInfo';
+import { fileUrl } from '@/config/env';
 
 export default {
   data () {
@@ -35,7 +36,7 @@ export default {
         if (this.userPwdForm.model.confirmPassword !== '' &&
             this.userPwdForm.model.confirmPassword !== null &&
             this.userPwdForm.model.confirmPassword !== undefined) {
-          this.$refs.userPwdForm.$refs.userPwdForm.validateField('confirmPassword');
+          this.$refs.userPwdForm.form.validateField('confirmPassword');
         }
         callback();
       }
@@ -50,6 +51,7 @@ export default {
       }
     };
     return {
+      imageUrl: null,
       currentTab: 'userInfo',
       userInfoForm: {
         model: {},
@@ -121,6 +123,7 @@ export default {
             events: {
               'on-success': (res, file) => {
                 if (res.success) {
+                  this.imageUrl = res.content.url;
                   this.userInfoForm.model.avatar = URL.createObjectURL(file.raw);
                   window.setTimeout(function () {
                     window.URL.revokeObjectURL(file.raw);
@@ -329,6 +332,7 @@ export default {
   methods: {
     initData () {
       this.userInfoForm.model = JSON.parse(JSON.stringify(this.userInfo));
+      this.userInfoForm.model.avatar = `${fileUrl}${this.userInfoForm.model.avatar}`;
       for (let i = 0; i < this.userInfoForm.column.length; i++) {
         let item = this.userInfoForm.column[i];
         if (item.formItemProps.prop === 'avatar') {
@@ -339,9 +343,10 @@ export default {
     },
     clickSaveBtn (type) {
       if (type === 1) {
-        this.$refs.userInfoForm.$refs.userInfoForm.validate((valid) => {
+        this.$refs.userInfoForm.form.validate((valid) => {
           if (valid) {
             let parameter = JSON.parse(JSON.stringify(this.userInfoForm.model));
+            parameter.avatar = this.imageUrl;
             parameter.updateUser = parameter.id;
             parameter.updateTime = switchTime(new Date(), 'YYYY-MM-DD hh:mm:ss');
             delete parameter.createTime;
@@ -363,7 +368,7 @@ export default {
           }
         });
       } else {
-        this.$refs.userPwdForm.$refs.userPwdForm.validate((valid) => {
+        this.$refs.userPwdForm.form.validate((valid) => {
           if (valid) {
             let parameter = JSON.parse(JSON.stringify(this.userPwdForm.model));
             parameter.account = this.userInfo.account;
@@ -394,9 +399,9 @@ export default {
     },
     resetFormModel (type) {
       if (type === 1) {
-        this.$refs.userInfoForm.$refs.userInfoForm.resetFields();
+        this.$refs.userInfoForm.form.resetFields();
       } else {
-        this.$refs.userPwdForm.$refs.userPwdForm.resetFields();
+        this.$refs.userPwdForm.form.resetFields();
       }
     }
   }
