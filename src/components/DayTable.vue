@@ -12,12 +12,12 @@
           <slot
             v-if="columnItem.slot"
             :name="`table-${columnItem.slot}`"
-            :row="scope">
+            :row="scope.row">
           </slot>
           <render
             v-if="columnItem.render"
             :render="columnItem.render"
-            :data="{item: columnItem, scope: scope}">
+            :data="{item: columnItem, row: scope.row}">
           </render>
           <span
             v-if="!columnItem.slot && !columnItem.render">{{ scope.row[columnItem.props.prop] }}

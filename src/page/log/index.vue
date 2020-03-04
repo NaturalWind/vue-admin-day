@@ -42,11 +42,11 @@ export default {
             render: (h, data) => {
               return (
                 <div>
-                  <div>{ `地址：${data.scope.row.url}` }</div>
-                  <div>{ `时间：${data.scope.row.time}` }</div>
-                  <div>{ `消息：${data.scope.row.message}` }</div>
-                  <div>{ `堆栈：${data.scope.row.stack}` }</div>
-                  <div>{ `信息：${data.scope.row.info}` }</div>
+                  <div>{ `地址：${data.row.url}` }</div>
+                  <div>{ `时间：${data.row.time}` }</div>
+                  <div>{ `消息：${data.row.message}` }</div>
+                  <div>{ `堆栈：${data.row.stack}` }</div>
+                  <div>{ `信息：${data.row.info}` }</div>
                 </div>
               )
             }
