@@ -332,7 +332,7 @@ export default {
   methods: {
     initData () {
       this.userInfoForm.model = JSON.parse(JSON.stringify(this.userInfo));
-      this.userInfoForm.model.avatar = `${fileUrl}${this.userInfoForm.model.avatar}`;
+      this.userInfoForm.model.avatar = this.userInfoForm.model.avatar ? `${fileUrl}${this.userInfoForm.model.avatar}` : this.userInfoForm.model.avatar;
       for (let i = 0; i < this.userInfoForm.column.length; i++) {
         let item = this.userInfoForm.column[i];
         if (item.formItemProps.prop === 'avatar') {
